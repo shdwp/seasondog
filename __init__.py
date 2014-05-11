@@ -18,7 +18,15 @@ def init_wizard(runtime, db):
 
 if __name__ == "__main__":
     parser = OptionParser(epilog="version {}, {}".format(info.VERSION, info.URL))
-    parser.set_usage("{} [action=next]".format(info.NAME))
+    parser.set_usage(
+"""{} [action=next,prev,reset,status,set,args]
+    next - watch next episode
+    prev - previous
+    set <EPISODE> - set progress
+    args <ARGS> - set player args
+    reset - reset progress and settings for directory
+    status - show progress and settings
+""".format(info.NAME))
     parser.add_option("-a", "--player-args", help="Provide overriding player args")
     (opt, args) = parser.parse_args()
 
@@ -26,7 +34,7 @@ if __name__ == "__main__":
     
     db = database.load(runtime[r.DB_PATH])
 
-    action = len(args) > 0 and args[0] or "watch"
+    action = len(args) > 0 and args[0] or "next"
     data = database.get(db, runtime[r.PATH])
     iswatch = True
 
@@ -37,6 +45,11 @@ if __name__ == "__main__":
         data[database.EPISODE] += 1
     elif action == "prev":
         data[database.EPISODE] -= 1
+    elif action == "set":
+        data[database.EPISODE] = args[1]
+    elif action == "args":
+        data[database.PLAYER_ARGS] = args[1]
+        iswatch = False
     elif action == "status":
         print("{} v{}, database {} v{} ({})\nInternal path: {}\nCurrent episode: {}\nPlayer args: {}".format(
             info.NAME,

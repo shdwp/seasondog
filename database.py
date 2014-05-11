@@ -40,6 +40,13 @@ def init(file):
 def load(file):
     db = db_struct(file)
 
+    dir = os.path.join(*os.path.split(file)[:-1])
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+
+    if not os.path.exists(file):
+        open(file, 'w').close()
+
     with open(file) as f:
         f.readline() # @TODO: header check
         line = f.readline()

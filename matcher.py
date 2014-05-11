@@ -1,8 +1,6 @@
 import os
 import re
-
-SUB_EXTENSIONS = ["srt", "ass"]
-MOVIE_EXTENSIONS = ["avi", "mkv", "mp4"]
+from config import MOVIE_EXTENSIONS, SUB_EXTENSIONS
 
 def leading_zero(episode, count):
     return ''.join(['0' for i in range(count - len(str(episode)))]) + str(episode)

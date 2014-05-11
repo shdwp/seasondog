@@ -1,4 +1,4 @@
 
 NAME = "sdog"
 VERSION = 0.1
-URL = "http://github.com/shadowprince/seriedog"
+URL = "http://github.com/shadowprince/seasondog"

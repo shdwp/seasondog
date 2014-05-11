@@ -3,8 +3,7 @@ import os
 import database as database
 import runtime as r
 import re
-
-MPLAYER = "mplayer -lavdopts threads=4 -fs {} \"{}\""
+import config
 
 def player_args(runtime, data, string):
     for call in re.finditer(r"(\@(?P<fn>[a-zA-Z_]+)\((?P<args>.*)\))", string):
@@ -21,6 +20,8 @@ def player_args(runtime, data, string):
                 if limit != -1:
                     files = files[:limit]
                 string = string.replace(match, "\"{}\"".format(delim.join(files)))
+            else:
+                string = string.replace(match, "")
 
     return string
         
@@ -43,7 +44,7 @@ def watch(runtime, data):
         except KeyboardInterrupt:
             return
         
-        os.system(MPLAYER.format(args, file))
+        os.system(config.PLAYER.format(player_args=args, videofile=file))
     else:
         print("Episode #{}\n        No episodes matched!".format(episode))
 

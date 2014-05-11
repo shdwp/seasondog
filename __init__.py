@@ -26,7 +26,7 @@ if __name__ == "__main__":
     
     db = database.load(runtime[r.DB_PATH])
 
-    action = len(args) > 0 and args[0] or "next"
+    action = len(args) > 0 and args[0] or "watch"
     data = database.get(db, runtime[r.PATH])
     iswatch = True
 

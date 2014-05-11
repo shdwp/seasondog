@@ -45,7 +45,7 @@ def load(file):
         line = f.readline()
         while line:
             directory, episode, player_args = line.strip().split(":")
-            episode = episode.replace(chr(0), "")
+            player_args = player_args.replace(chr(0), "")
 
             db[DB][directory] = {
                     EPISODE: int(episode),

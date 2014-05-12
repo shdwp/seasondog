@@ -26,6 +26,7 @@ After you finish setup you can use such commands:
 
 * `sdog` - watch next episode 
 * `sdog prev` - watch prev episode
+* `sdog watch` - watch current episode
 * `sdog set <EPISODE>` - set episode directly and watch it
 * `sdog reset` - reset progress and settings for directory
 * `sdog status` - get current dir status information

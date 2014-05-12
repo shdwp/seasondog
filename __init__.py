@@ -22,6 +22,7 @@ if __name__ == "__main__":
 """{} [action=next,prev,reset,status,set,args]
     next - watch next episode
     prev - previous
+    watch - watch current episode
     set <EPISODE> - set progress
     args <ARGS> - set player args
     reset - reset progress and settings for directory

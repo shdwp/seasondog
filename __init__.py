@@ -45,6 +45,8 @@ if __name__ == "__main__":
         data[database.EPISODE] += 1
     elif action == "prev":
         data[database.EPISODE] -= 1
+    elif action == "watch":
+        pass
     elif action == "set":
         data[database.EPISODE] = args[1]
     elif action == "args":

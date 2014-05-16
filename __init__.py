@@ -42,6 +42,8 @@ if __name__ == "__main__":
     if not data or action == "reset":
         data = init_wizard(runtime, db)
 
+    #@TODO: directory migration when renamed
+    #@TODO: database cleanup
     if action == "next":
         data[database.EPISODE] += 1
     elif action == "prev":

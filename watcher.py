@@ -6,7 +6,7 @@ import re
 import config
 
 def player_args(runtime, data, string):
-    for call in re.finditer(r"(\@(?P<fn>[a-zA-Z_]+)\((?P<args>.*)\))", string):
+    for call in re.finditer(r"(\@(?P<fn>[a-zA-Z_]+)\((?P<args>[^@]*)\))", string):
         match = call.group(1)
         args = call.group("args").split(" ")
         fn = call.group("fn")
@@ -16,6 +16,18 @@ def player_args(runtime, data, string):
             delim = args[2] if len(args) > 2 else " "
 
             files = matcher.match_subs(args[0], data[database.EPISODE], -1)
+            if files:
+                if limit != -1:
+                    files = files[:limit]
+                string = string.replace(match, "\"{}\"".format(delim.join(files)))
+            else:
+                string = string.replace(match, "")
+
+        elif fn == "files":
+            limit = int(args[1]) if len(args) > 1 else 1
+            delim = args[2] if len(args) > 2 else " "
+
+            files = matcher.match_file(args[0], data[database.EPISODE], -1)
             if files:
                 if limit != -1:
                     files = files[:limit]

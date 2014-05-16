@@ -1,6 +1,6 @@
 import os
 import re
-from config import MOVIE_EXTENSIONS, SUB_EXTENSIONS
+from seasondog.config import MOVIE_EXTENSIONS, SUB_EXTENSIONS
 
 def leading_zero(episode, count):
     return ''.join(['0' for i in range(count - len(str(episode)))]) + str(episode)

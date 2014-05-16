@@ -1,5 +1,5 @@
 from optparse import OptionParser
-import config
+from seasondog import config
 
 PATH = 1
 DB_PATH = 2

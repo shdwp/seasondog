@@ -1,9 +1,9 @@
-import matcher
 import os
-import database as database
-import runtime as r
 import re
-import config
+from seasondog import matcher
+from seasondog import database as database
+from seasondog import runtime as r
+from seasondog import config
 
 def player_args(runtime, data, string):
     for call in re.finditer(r"(\@(?P<fn>[a-zA-Z_]+)\((?P<args>[^@]*)\))", string):

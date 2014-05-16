@@ -4,7 +4,9 @@ Small tool for saving your progress in watching series.
 
 ## Installation
 
-Currently not published as pip package, but have no dependencies, so just link **\_\_init\_\_.py** into somewhere you have in $PATH.
+You can install seasondog trough `pip`:
+    
+    sudo pip install seasondog
 
 ## Configuration
 

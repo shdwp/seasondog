@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 import os
 import sys
-import info
-import database as database
-import matcher as matcher
-import watcher
-import runtime as r
+from seasondog import info
+from seasondog import database as database
+from seasondog import matcher as matcher
+from seasondog import watcher
+from seasondog import runtime as r
 from optparse import OptionParser
 
 def init_wizard(runtime, db):

@@ -1,6 +1,6 @@
 import os
-import info
 import copy
+from seasondog import info
 
 NAME = "plain"
 VERSION = 0.1

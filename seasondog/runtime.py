@@ -11,3 +11,6 @@ def runtime_struct(path, opt):
             PLAYER_ARGS_OVERRIDE: opt.player_args,
             }
 
+def format(s, *args, **kwargs):
+    kwargs.update(config.COLORS)
+    return s.format(*args, **kwargs)

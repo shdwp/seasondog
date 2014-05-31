@@ -9,9 +9,9 @@ from seasondog import runtime as r
 from optparse import OptionParser
 
 def init_wizard(runtime, db):
-    print("No record found on {}".format(runtime[r.PATH]))
-    data = {database.EPISODE: 1,
-            database.PLAYER_ARGS: input("Player args > "),
+    print(r.format("{red}No record found on {blue}{}{red}!{endc}", runtime[r.PATH]))
+    data = {database.EPISODE: 0,
+            database.PLAYER_ARGS: input("Player args: "),
             }
     database.set(db, runtime[r.PATH], data)
     return data
@@ -56,7 +56,9 @@ if __name__ == "__main__":
         data[database.PLAYER_ARGS] = args[1]
         iswatch = False
     elif action == "status":
-        print("{} v{}, database {} v{} ({})\nInternal path: {}\nCurrent episode: {}\nPlayer args: {}".format(
+        print(r.format(
+"{blue}{}{endc} v{}, database {} v{} ({grey}{}{endc})\n\
+Internal path: {grey}{}{endc}\nCurrent episode: {blue}{}{endc}\nPlayer args: {blue}{}{endc}",
             info.NAME,
             info.VERSION,
             database.NAME,

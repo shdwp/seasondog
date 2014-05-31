@@ -47,10 +47,10 @@ def watch(runtime, data):
         else:
                 args = player_args(runtime, data, runtime[r.PLAYER_ARGS_OVERRIDE])
 
-        print(r.format("{c_title}Episode {c_ep_number}{bold}#{episode}{endc}\n        {c_path}{path}\n        {c_args}{args}\n{endc}{c_control}[[enter] - watch, [^c] - break]{endc}", 
+        print(r.format("{c_title}Episode {c_ep_number}{bold}#{episode}{endc}\n        {c_path}{path}\n        {c_args}{args}\n{endc}{c_control}[↵ watch, ^C break]{endc}", 
             episode=episode, 
             path=os.path.split(file)[-1],
-            args=args,
+            args=args if args else "",
             ))
         try:
             input()

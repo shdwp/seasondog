@@ -102,5 +102,8 @@ def set(db, directory, data):
     db[TRANSACTION][directory] = data
     return db
 
+def unset(db, directory):
+    del db[DB][directory]
+
 def update(db, directory, fn, *args, **kwargs):
     return set(db, directory, fn(get(db, directory), *args, **kwargs))

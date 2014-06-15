@@ -35,12 +35,14 @@ Available funtions:
 After you finish setup you can use such commands:
 
 * sdog - watch next episode 
-* sdog prev - watch prev episode
-* sdog watch - watch current episode
+* sdog p(rev) - watch prev episode
+* sdog w(atch) - watch current episode
 * sdog set <EPISODE> - set episode directly and watch it
 * sdog reset - reset progress and settings for directory
-* sdog status - get current dir status information
+* sdog s(tatus) - get current dir status information
 * sdog args <ARGS> - set player args in database
+* sdog m(igrate) <DEST> - migrate current's directory status into DEST, with directory name preserved. You can disable preservation and provide full path using -p argument. Also, instead of using current directory you can provide it by yourself with -f <FROM> argument.
+
 
 And you can use option '-a' for one-time overriding player args. 
 

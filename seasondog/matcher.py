@@ -41,8 +41,9 @@ def match_episode(directory, episode, limit=1):
     matchers = []
     for p in prefixes:
         for s in suffixes:
-            for i in range(1, 3):
-                matchers.append(prefix_suffix_matcher(p, s, episode, MOVIE_EXTENSIONS, i))
+            for s in suffixes:
+                for i in range(1, 3):
+                    matchers.append(prefix_suffix_matcher(p+s, s, episode, MOVIE_EXTENSIONS, i))
 
     matchers.append(simple_matcher(episode, MOVIE_EXTENSIONS))
     matchers.append(nth_matcher(episode))

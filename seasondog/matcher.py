@@ -1,6 +1,7 @@
-from seasondog.config import MOVIE_EXTENSIONS, SUB_EXTENSIONS, MATCHER_DEBUG
-if MATCHER_DEBUG:
-    import time
+from seasondog.config import MOVIE_EXTENSIONS, SUB_EXTENSIONS
+from seasondog import config
+
+import time
 import os
 import re
 
@@ -8,9 +9,6 @@ def leading_zero(episode, count):
     return ''.join(['0' for i in range(count - len(str(episode)))]) + str(episode)
 
 def re_matcher(pattern):
-    if MATCHER_DEBUG:
-        print("Pattern: {}".format(pattern))
-
     return lambda x, n: re.match(pattern, x, re.I)
 
 def simple_matcher(episode, extensions=[], zero=2):
@@ -26,7 +24,7 @@ def nth_matcher(episode):
     return lambda x, n: n == episode
 
 def match(directory, matchers, limit=1):
-    if MATCHER_DEBUG:
+    if config.MATCHER_DEBUG:
         start_time = time.time()
 
     for path, dirs, files in os.walk(directory):
@@ -38,16 +36,20 @@ def match(directory, matchers, limit=1):
             for x in files:
                 i += 1
                 if matcher(x, i):
-                    print(matcher, x)
                     result.append(os.path.join(path, x))
 
+            if config.MATCHER_DEBUG:
+                if len(result) != 0:
+                    print("Matcher {}, matched {}".format(matcher, result))
+                    print("    ", "ok" if len(result) == 1 else "fail: multiple results")
+
             if result and (limit == -1 or len(result) == limit):
-                if MATCHER_DEBUG:
-                    print("Time: {}".format(time.time() - start_time))
+                if config.MATCHER_DEBUG:
+                    print("Matched in: {}".format(time.time() - start_time))
                 return result
 
-    if MATCHER_DEBUG:
-        print("Time: {}".format(time.time() - start_time))
+    if config.MATCHER_DEBUG:
+        print("Matched in: {}".format(time.time() - start_time))
         print("None matched!")
 
 def match_episode(directory, episode, limit=1):

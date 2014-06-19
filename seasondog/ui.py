@@ -1,6 +1,7 @@
 import os
 import sys
 import optparse
+from seasondog import config
 from seasondog import info
 from seasondog import database as database
 from seasondog import matcher as matcher
@@ -40,6 +41,7 @@ def opt_parser():
     parser.add_option("-f", "--from", help="Provide from parameter for migration (instead of using current directory)")
     parser.add_option("-p", "--not-preserve", help="Don't preserve directory name", action="store_true")
     parser.add_option("-v", "--version", help="Show version", action="store_true")
+    parser.add_option("-d", "--debug", help="Turn on debug messages", action="store_true")
 
     return parser
 
@@ -60,6 +62,9 @@ def main():
         action = args[0]
     else:
         action = "next"
+
+    if opt.debug:
+        config.MATCHER_DEBUG = True
 
     try:
         if action == "version":

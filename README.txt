@@ -10,11 +10,13 @@ You can install seasondog trough pip:
 
 ## Configuration
 
-First you need to edit config.py:
+First you need to edit copy default .sdogrc from repository to ~, and edit it:
 
 * DB_PATH: as default, database located in ~/.seasondog/database, but you can change it with this variable
 * PLAYER: you need to provide command line for starting your videoplayer. Two placeholders: videofile and player_args
 * SUB_EXTENSIONS and MOVIE_EXTENSIONS: you can change or add file extensions for lookuping various files.
+
+There is another configuration options, they're all documented in example .sdogrc
 
 ## Usage
 
@@ -38,11 +40,10 @@ After you finish setup you can use such commands:
 * sdog p(rev) - watch prev episode
 * sdog w(atch) - watch current episode
 * sdog set <EPISODE> - set episode directly and watch it
-* sdog reset - reset progress and settings for directory
+* sdog r(eset) - delete current directory (or directory, provided by -f argument) from database
 * sdog s(tatus) - get current dir status information
 * sdog args <ARGS> - set player args in database
 * sdog m(igrate) <DEST> - migrate current's directory status into DEST, with directory name preserved. You can disable preservation and provide full path using -p argument. Also, instead of using current directory you can provide it by yourself with -f <FROM> argument.
-
 
 And you can use option '-a' for one-time overriding player args. 
 

@@ -9,13 +9,13 @@ from seasondog import runtime as r
 from optparse import OptionParser
 
 def init_wizard(runtime, db):
-    print(r.format("No record found on {blue}{}{endc}.", runtime[r.PATH]))
+    print(r.format("No record found on {c_path}{}{endc}.", runtime[r.PATH]))
     try:
         data = {database.EPISODE: 0,
                 database.PLAYER_ARGS: input("Player args: "),
                 }
     except KeyboardInterrupt:
-        raise RuntimeError(r.format("{red}Cancelled.{endc}"))
+        raise RuntimeError(r.format("{c_error}Cancelled.{endc}"))
 
     database.set(db, runtime[r.PATH], data)
     return data 
@@ -29,7 +29,8 @@ def opt_parser():
     w(atch) - watch current episode
     set <EPISODE> - set progress
     args <ARGS> - set player args
-    reset - reset progress and settings for directory
+    r(eset) - reset progress and settings for directory
+        -f <PATH> - provide directory PATH instead of default .
     m(igrate) <DESTINATION> - migrate current directory to DESTINATION. 
         Directory name is preserved, only it's location is changed
         -f <PATH> - provide directory PATH instead of default .
@@ -45,7 +46,7 @@ def arg(args, n):
     try:
         return args[n]
     except IndexError:
-        raise RuntimeError(r.format("{red}Command requires at least {} argument(s)!{endc}", n))
+        raise RuntimeError(r.format("{c_error}Command requires at least {} argument(s)!{endc}", n))
 
 def main():
     (opt, args) = opt_parser().parse_args()
@@ -69,16 +70,14 @@ def main():
                 new_path = os.path.abspath(os.path.join(arg(args, 1), dir))
 
             try:
-                input(r.format("New directory for {blue}{}{endc} is {blue}{}{endc}. Is this right?\n{c_control}[↵ watch, ^C break]{endc}", old_path, new_path))
+                input(r.format("New directory for {c_path}{}{endc} is {c_path}{}{endc}. Is this right?\n{c_control}[↵ watch, ^C break]{endc}", old_path, new_path))
                 data = database.get(db, old_path)
                 if not data:
-                    raise RuntimeError(r.format("{red}No record on {}!{endc}", old_path))
+                    raise RuntimeError(r.format("{c_error}No record on {}!{endc}", old_path))
 
                 database.set(db, new_path, data)
                 database.unset(db, old_path)
                 database.save(db)
-
-                print(r.format("{blue}Updated!{endc}"))
             except KeyboardInterrupt:
                 pass
 
@@ -87,9 +86,37 @@ def main():
         data = database.get(db, runtime[r.PATH])
         iswatch = True
 
-        if not data or action == "reset":
-            data = init_wizard(runtime, db)
+        if action == "reset" or action == "r":
+            path = opt.__dict__["from"] if opt.__dict__["from"] else runtime[r.PATH]
+            try:
+                database.unset(db, path)
+            except KeyError:
+                print(r.format("{c_error}There's no record at {c_path}{}{c_error} !{endc}", path))
+            database.save(db)
 
+            return
+
+        elif action == "status" or action == "s":
+            print(r.format(
+                "{blue}{}{endc} v{}, database {} v{} ({grey}{}{endc})\nInternal path: {grey}{}{endc}",
+                info.NAME,
+                info.VERSION,
+                database.NAME,
+                database.VERSION,
+                db[database.PATH],
+                runtime[r.PATH],))
+
+            if data:
+                print(r.format("Current episode: {blue}{}{endc}\nPlayer args: {blue}{}{endc}",
+                    data[database.EPISODE],
+                    data[database.PLAYER_ARGS] or "None",))
+            else:
+                print(r.format("No data on {c_path}{}{endc}.", runtime[r.PATH]))
+
+            return
+
+        if not data:
+            data = init_wizard(runtime, db)
         if action == "next" or action == "n":
             data[database.EPISODE] += 1
         elif action == "prev" or action == "p":
@@ -100,23 +127,10 @@ def main():
             try:
                 data[database.EPISODE] = int(arg(args, 1))
             except ValueError:
-                raise RuntimeError(r.format("{red}{} is not a number!{endc}", arg(args, 1)))
+                raise RuntimeError(r.format("{c_error}{} is not a number!{endc}", arg(args, 1)))
 
         elif action == "args":
             data[database.PLAYER_ARGS] = arg(args, 1)
-            iswatch = False
-        elif action == "status" or action == "s":
-            print(r.format(
-    "{blue}{}{endc} v{}, database {} v{} ({grey}{}{endc})\n\
-    Internal path: {grey}{}{endc}\nCurrent episode: {blue}{}{endc}\nPlayer args: {blue}{}{endc}",
-                info.NAME,
-                info.VERSION,
-                database.NAME,
-                database.VERSION,
-                db[database.PATH],
-                runtime[r.PATH],
-                data[database.EPISODE],
-                data[database.PLAYER_ARGS],))
             iswatch = False
 
         database.set(db, runtime[r.PATH], data)

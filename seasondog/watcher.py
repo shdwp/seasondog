@@ -40,7 +40,8 @@ def player_args(runtime, data, string):
 def watch(runtime, data):
     episode = data[database.EPISODE]
 
-    file = matcher.match_episode(runtime[r.PATH], episode)[0]
+    results = matcher.match_episode(runtime[r.PATH], episode)
+    file = results[0] if results else None
     if file:
         if not runtime[r.PLAYER_ARGS_OVERRIDE]:
             args = player_args(runtime, data, data[database.PLAYER_ARGS])
@@ -59,5 +60,6 @@ def watch(runtime, data):
         
         os.system(config.PLAYER.format(player_args=args, videofile=file))
     else:
-        print("Episode #{}\n        No episodes matched!".format(episode))
+        print(r.format("{c_title}Episode {c_ep_number}{bold}#{episode}{endc}\n        {red}No episodes matched!{endc}", 
+            episode=episode))
 

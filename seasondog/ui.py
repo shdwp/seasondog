@@ -39,6 +39,7 @@ def opt_parser():
     parser.add_option("-a", "--player-args", help="Provide overriding player args")
     parser.add_option("-f", "--from", help="Provide from parameter for migration (instead of using current directory)")
     parser.add_option("-p", "--not-preserve", help="Don't preserve directory name", action="store_true")
+    parser.add_option("-v", "--version", help="Show version", action="store_true")
 
     return parser
 
@@ -53,9 +54,24 @@ def main():
     runtime = r.runtime_struct(os.path.abspath("."), opt)
     db = database.load(runtime[r.DB_PATH])
 
-    action = len(args) > 0 and args[0] or "next"
+    if opt.version:
+        action = "version"
+    elif len(args) > 0:
+        action = args[0]
+    else:
+        action = "next"
 
     try:
+        if action == "version":
+            print(r.format(
+                "seasondog {version}\nCopyright {copy}.\nLicensed under {license}.",
+                version=info.VERSION,
+                copy=info.COPYRIGHT,
+                license=info.LICENSE,
+                url=info.URL,))
+
+            return
+
         if action == "migrate" or action == "m":
             if opt.__dict__["from"]:
                 old_path = os.path.abspath(opt.__dict__["from"])

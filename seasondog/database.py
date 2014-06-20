@@ -1,9 +1,10 @@
 import os
 import copy
 from seasondog import info
+from seasondog import runtime as r
 
 NAME = "plain"
-VERSION = 0.1
+VERSION = 1.0
 
 DB = 1
 TRANSACTION = 2
@@ -11,7 +12,7 @@ PATH = 3
 PLAYER_ARGS = 4
 EPISODE = 5 
 
-STRLEN = 128
+STRLEN = 512
 
 def increment(a):
     return a + 1
@@ -31,11 +32,15 @@ def db_struct(path, db={}, transaction={}):
 def db_value(directory, episode, args):
     return text("{}:{}:{}".format(directory, episode, args), STRLEN)
 
-def init(file):
-    with open(file, 'w') as f:
-        f.write("{}:{},{}:{}\n".format(info.NAME, info.VERSION, NAME, VERSION))
-    
-    return db_struct(file)
+def init(db):
+    with open(db[PATH], 'w') as f:
+        f.write(text("{}:{},{}:{}".format(info.NAME, info.VERSION, NAME, VERSION), STRLEN)+"\n")
+
+def check(header):
+    sdog, db = header.replace(chr(0), "").strip().split(",")
+    name, version = db.strip().split(":")
+    if name != NAME or float(version) > float(VERSION):
+        raise RuntimeError("Unsupported database - adapter {}, {}; db {}, {}".format(NAME, VERSION, name, version))
 
 def load(file):
     db = db_struct(file)
@@ -45,10 +50,11 @@ def load(file):
         os.makedirs(dir)
 
     if not os.path.exists(file):
-        open(file, 'w').close()
+        init(db)
 
     with open(file) as f:
-        f.readline() # @TODO: header check
+        check(f.readline())
+
         line = f.readline()
         while line:
             directory, episode, player_args = line.strip().split(":")
@@ -64,7 +70,7 @@ def load(file):
     return db
 
 def save(db):
-    init(db[PATH])
+    init(db)
     data = db[DB].copy()
     for k, v in db[TRANSACTION].items():
         data[k] = v
@@ -73,26 +79,37 @@ def save(db):
         for directory, option in data.items():
             f.write(db_value(directory, option[EPISODE], option[PLAYER_ARGS]) + "\n")
 
-def commit(db, file):
-    map = {}
-    
-    index = 1
-    with open(file) as f:
-        f.readline() # @TODO: header check
-        line = f.readline()
-        while line:
-            directory, episode = line.strip().split(":")
-            if directory in db[TRANSACTION]:
-                map[index] = [directory, db[TRANSACTION][directory]]
-                db[DB][directory] = db[TRANSACTION][directory]
-                del db[TRANSACTION][directory]
-            index += 1
+def commit(db):
+    update = {}
+    new = {}
+
+    f = open(db[PATH], 'r')
+    for k, v in db[TRANSACTION].items():
+        if db[DB].get(k):
+            pos = -1
             line = f.readline()
-    
-    with open(file, 'a') as f:
-        f.seek(0)
-        for line, [directory, episode] in map.items():
-            f.write(db_value(directory, episode) + "\n")
+            while line and (pos < 0):
+                directory, episode, player_args = line.strip().split(":")
+                if directory == k:
+                    pos = abs(pos) + 1
+
+                pos -= 1
+                line = f.readline()
+
+            if pos >= 0:
+                update[pos] = [k, v]
+        else:
+            new[k] = v
+
+    f = open(db[PATH], 'r+b')
+    f.seek(0)
+    for i, [directory, data] in update.items():
+        f.seek((i-1)*(STRLEN+1))
+        f.write((db_value(directory, data[EPISODE], data[PLAYER_ARGS]) + "\n").encode("utf-8"))
+
+    f = open(db[PATH], 'a')
+    for directory, data in new.items():
+        f.write(db_value(directory, data[EPISODE], data[PLAYER_ARGS]) + "\n")
 
 
 def get(db, directory):
@@ -107,3 +124,29 @@ def unset(db, directory):
 
 def update(db, directory, fn, *args, **kwargs):
     return set(db, directory, fn(get(db, directory), *args, **kwargs))
+
+def migrate(db, old_path, new_path):
+    data = get(db, old_path)
+    if not data:
+        raise RuntimeError(r.format("{c_error}No record on {}!{endc}", old_path))
+
+    set(db, new_path, data)
+    unset(db, old_path)
+    save(db)
+
+def cleanup(db):
+    counter = 0
+    unset_directories = []
+    for k, v in db[DB].items():
+        if not os.path.exists(k):
+            counter += 1
+            unset_directories.append(k)
+
+    for k in unset_directories:
+        unset(db, k)
+
+    if counter > 0:
+        save(db)
+
+    return counter
+

@@ -36,6 +36,7 @@ def opt_parser():
         Directory name is preserved, only it's location is changed
         -f <PATH> - provide directory PATH instead of default .
         -p - don't preserve directory name, DESTINATION is full path to directory
+    cleanup - remove not-existent directories from database
     s(tatus) - show progress and settings\n""".format(info.NAME))
     parser.add_option("-a", "--player-args", help="Provide overriding player args")
     parser.add_option("-f", "--from", help="Provide from parameter for migration (instead of using current directory)")
@@ -92,15 +93,16 @@ def main():
 
             try:
                 input(r.format("New directory for {c_path}{}{endc} is {c_path}{}{endc}. Is this right?\n{c_control}[↵ watch, ^C break]{endc}", old_path, new_path))
-                data = database.get(db, old_path)
-                if not data:
-                    raise RuntimeError(r.format("{c_error}No record on {}!{endc}", old_path))
 
-                database.set(db, new_path, data)
-                database.unset(db, old_path)
-                database.save(db)
+                database.migrate(db, old_path, new_path)
             except KeyboardInterrupt:
                 pass
+
+            return
+
+        elif action == "cleanup":
+            deleted = database.cleanup(db)
+            print(r.format("Deleted {c_ep_number}{}{endc} entries.", deleted))
 
             return
 
@@ -155,7 +157,7 @@ def main():
             iswatch = False
 
         database.set(db, runtime[r.PATH], data)
-        database.save(db)
+        database.commit(db)
 
         if iswatch:
             watcher.watch(runtime, data)

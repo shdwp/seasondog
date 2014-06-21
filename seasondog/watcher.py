@@ -46,7 +46,7 @@ def watch(runtime, data):
         if not runtime[r.PLAYER_ARGS_OVERRIDE]:
             args = player_args(runtime, data, data[database.PLAYER_ARGS])
         else:
-                args = player_args(runtime, data, runtime[r.PLAYER_ARGS_OVERRIDE])
+            args = player_args(runtime, data, runtime[r.PLAYER_ARGS_OVERRIDE])
 
         print(r.format("{c_title}Episode {c_ep_number}{bold}#{episode}{endc}\n        {c_path}{path}\n        {c_args}{args}\n{endc}{c_control}[↵ watch, ^C break]{endc}", 
             episode=episode, 

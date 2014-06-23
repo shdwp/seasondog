@@ -5,23 +5,30 @@ import time
 import os
 import re
 
+
 def leading_zero(episode, count):
     return ''.join(['0' for i in range(count - len(str(episode)))]) + str(episode)
+
 
 def re_matcher(pattern):
     return lambda x, n: re.match(pattern, x, re.I)
 
+
 def simple_matcher(episode, extensions=[], zero=2):
     return re_matcher(r"^.*{}.*({})$".format(leading_zero(episode, zero), "|".join(extensions)))
+
 
 def prefix_matcher(prefix, episode, extensions=[], zero=2):
     return re_matcher(r"^.*{}{}.*({})$".format(prefix, leading_zero(episode, zero), "|".join(extensions)))
 
+
 def prefix_suffix_matcher(prefix, suffix, episode, extensions=[], zero=2):
     return re_matcher(r"^.*{}{}{}.*({})$".format(prefix, leading_zero(episode, zero), suffix, "|".join(extensions)))
 
+
 def nth_matcher(episode):
     return lambda x, n: n == episode
+
 
 def match(directory, matchers, limit=1):
     if config.MATCHER_DEBUG:
@@ -52,6 +59,7 @@ def match(directory, matchers, limit=1):
         print("Matched in: {}".format(time.time() - start_time))
         print("None matched!")
 
+
 def match_episode(directory, episode, limit=1):
     prefixes = ["episode", "ep", "e", "x"]
     surroundings = [" ", "", "_"]
@@ -68,6 +76,7 @@ def match_episode(directory, episode, limit=1):
 
     return match(directory, matchers, limit)
 
+
 def match_subs(directory, episode, limit=1):
     prefixes = ["episode", "ep", "e", "x"]
     surroundings = [" ", "", "_"]
@@ -83,10 +92,11 @@ def match_subs(directory, episode, limit=1):
 
     return match(directory, matchers, limit)
 
+
 def match_file(directory, episode, limit=1):
     return match(
-            directory, [
+        directory, [
             simple_matcher(episode),
             nth_matcher(episode),
-            ],
-            limit)
+        ],
+        limit)

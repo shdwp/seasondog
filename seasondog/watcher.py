@@ -5,6 +5,7 @@ from seasondog import database as database
 from seasondog import runtime as r
 from seasondog import config
 
+
 def player_args(runtime, data, string):
     for call in re.finditer(r"(\@(?P<fn>[a-zA-Z_]+)\((?P<args>[^@]*)\))", string):
         match = call.group(1)
@@ -47,7 +48,8 @@ def player_args(runtime, data, string):
             string = string.replace(match, "\"{}\"".format(vars.get(args[0])))
 
     return string
-        
+
+
 def watch(runtime, data):
     episode = data[database.EPISODE]
 
@@ -60,17 +62,15 @@ def watch(runtime, data):
             args = player_args(runtime, data, runtime[r.PLAYER_ARGS_OVERRIDE])
 
         print(r.format("{c_title}Episode {c_ep_number}{bold}#{episode}{endc}\n        {c_path}{path}\n        {c_args}{args}\n{endc}{c_control}[↵ watch, ^C break]{endc}", 
-            episode=episode, 
+            episode=episode,
             path=os.path.split(file)[-1],
-            args=args if args else "",
-            ))
+            args=args if args else "",))
         try:
             input()
         except KeyboardInterrupt:
             return
-        
+
         os.system(config.PLAYER.format(player_args=args, videofile=file))
     else:
-        print(r.format("{c_title}Episode {c_ep_number}{bold}#{episode}{endc}\n        {red}No episodes matched!{endc}", 
+        print(r.format("{c_title}Episode {c_ep_number}{bold}#{episode}{endc}\n        {red}No episodes matched!{endc}",
             episode=episode))
-

@@ -1,13 +1,12 @@
 import os
-import sys
-import optparse
+import readline
 from seasondog import config
 from seasondog import info
 from seasondog import database as database
-from seasondog import matcher as matcher
 from seasondog import watcher
 from seasondog import runtime as r
 from optparse import OptionParser
+
 
 def init_wizard(runtime, db):
     print(r.format("No record found on {c_path}{}{endc}.", runtime[r.PATH]))
@@ -19,12 +18,12 @@ def init_wizard(runtime, db):
         raise RuntimeError(r.format("{c_error}Cancelled.{endc}"))
 
     database.set(db, runtime[r.PATH], data)
-    return data 
+    return data
+
 
 def opt_parser():
     parser = OptionParser(epilog="version {}, {}".format(info.VERSION, info.URL))
-    parser.set_usage(
-"""{} [action=next,prev,reset,status,set,args]
+    parser.set_usage("""{} [action=next,prev,reset,status,set,args]
     n(ext) - watch next episode
     p(rev) - previous
     w(atch) - watch current episode
@@ -47,11 +46,13 @@ def opt_parser():
 
     return parser
 
+
 def arg(args, n):
     try:
         return args[n]
     except IndexError:
         raise RuntimeError(r.format("{c_error}Command requires at least {} argument(s)!{endc}", n))
+
 
 def main():
     (opt, args) = opt_parser().parse_args()
@@ -164,4 +165,3 @@ def main():
             watcher.watch(runtime, data)
     except RuntimeError as e:
         print(e)
-

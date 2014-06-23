@@ -1,5 +1,4 @@
 import os
-import copy
 from seasondog import info
 from seasondog import runtime as r
 
@@ -10,18 +9,21 @@ DB = 1
 TRANSACTION = 2
 PATH = 3
 PLAYER_ARGS = 4
-EPISODE = 5 
+EPISODE = 5
 
 STRLEN = 512
 
+
 def increment(a):
     return a + 1
+
 
 def text(s, ln):
     if len(s) <= ln:
         return s + "".join([chr(0) for i in range(ln - len(s))])
     else:
-        raise RuntimeException("Str value out of STRLEN!")
+        raise RuntimeError("Str value out of STRLEN!")
+
 
 def db_struct(path, db={}, transaction={}):
     return {DB: db,
@@ -29,18 +31,22 @@ def db_struct(path, db={}, transaction={}):
             PATH: path,
             }
 
+
 def db_value(directory, episode, args):
     return text("{}:{}:{}".format(directory, episode, args), STRLEN)
+
 
 def init(db):
     with open(db[PATH], 'w') as f:
         f.write(text("{}:{},{}:{}".format(info.NAME, info.VERSION, NAME, VERSION), STRLEN)+"\n")
+
 
 def check(header):
     sdog, db = header.replace(chr(0), "").strip().split(",")
     name, version = db.strip().split(":")
     if name != NAME or float(version) > float(VERSION):
         raise RuntimeError("Unsupported database - adapter {}, {}; db {}, {}".format(NAME, VERSION, name, version))
+
 
 def load(file):
     db = db_struct(file)
@@ -61,13 +67,13 @@ def load(file):
             player_args = player_args.replace(chr(0), "")
 
             db[DB][directory] = {
-                    EPISODE: int(episode),
-                    PLAYER_ARGS: player_args,
-                    }
+                EPISODE: int(episode),
+                PLAYER_ARGS: player_args,}
 
             line = f.readline()
 
     return db
+
 
 def save(db):
     init(db)
@@ -78,6 +84,7 @@ def save(db):
     with open(db[PATH], 'a') as f:
         for directory, option in data.items():
             f.write(db_value(directory, option[EPISODE], option[PLAYER_ARGS]) + "\n")
+
 
 def commit(db):
     update = {}
@@ -115,15 +122,19 @@ def commit(db):
 def get(db, directory):
     return db[TRANSACTION].get(directory, db[DB].get(directory))
 
+
 def set(db, directory, data):
     db[TRANSACTION][directory] = data
     return db
 
+
 def unset(db, directory):
     del db[DB][directory]
 
+
 def update(db, directory, fn, *args, **kwargs):
     return set(db, directory, fn(get(db, directory), *args, **kwargs))
+
 
 def migrate(db, old_path, new_path):
     data = get(db, old_path)
@@ -133,6 +144,7 @@ def migrate(db, old_path, new_path):
     set(db, new_path, data)
     unset(db, old_path)
     save(db)
+
 
 def cleanup(db):
     counter = 0
@@ -149,4 +161,3 @@ def cleanup(db):
         save(db)
 
     return counter
-

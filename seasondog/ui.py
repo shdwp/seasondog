@@ -1,5 +1,8 @@
 import os
-import readline
+try:
+    import readline
+except ImportError:
+    pass
 from seasondog import config
 from seasondog import info
 from seasondog import database as database

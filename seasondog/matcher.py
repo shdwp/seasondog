@@ -61,12 +61,10 @@ def match(directory, matchers, limit=1):
 
 
 def match_episode(directory, episode, limit=1):
-    prefixes = ["episode", "ep", "e", "x"]
-    surroundings = [" ", "", "_"]
     matchers = []
-    for p in prefixes:
-        for s in surroundings:
-            for s in surroundings:
+    for p in config.PREFIXES:
+        for s in config.SURROUNDINGS:
+            for s in config.SURROUNDINGS:
                 for i in range(1, 3):
                     matchers.append(prefix_suffix_matcher(p+s, s, episode, MOVIE_EXTENSIONS, i))
 
@@ -78,12 +76,10 @@ def match_episode(directory, episode, limit=1):
 
 
 def match_subs(directory, episode, limit=1):
-    prefixes = ["episode", "ep", "e", "x"]
-    surroundings = [" ", "", "_"]
     matchers = []
-    for p in prefixes:
-        for s in surroundings:
-            for s in surroundings:
+    for p in config.PREFIXES:
+        for s in config.SURROUNDINGS:
+            for s in config.SURROUNDINGS:
                 for i in range(1, 3):
                     matchers.append(prefix_suffix_matcher(p, s, episode, SUB_EXTENSIONS, i))
 

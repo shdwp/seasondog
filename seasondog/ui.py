@@ -31,13 +31,14 @@ def opt_parser():
     set <EPISODE> - set progress
     args <ARGS> - set player args
     r(eset) - reset progress and settings for directory
-        -f <PATH> - provide directory PATH instead of default .
-    m(igrate) <DESTINATION> - migrate current directory to DESTINATION. 
+        -f <PATH> - provide directory PATH instead of current one
+    m(igrate) <DESTINATION> - migrate current directory to DESTINATION
         Directory name is preserved, only it's location is changed
-        -f <PATH> - provide directory PATH instead of default .
+        -f <PATH> - provide directory PATH instead of current one
         -p - don't preserve directory name, DESTINATION is full path to directory
     cleanup - remove not-existent directories from database
     s(tatus) - show progress and settings\n""".format(info.NAME))
+    parser.add_option("", "--database", help="Provide database location")
     parser.add_option("-a", "--player-args", help="Provide overriding player args")
     parser.add_option("-f", "--from", help="Provide from parameter for migration (instead of using current directory)")
     parser.add_option("-p", "--not-preserve", help="Don't preserve directory name", action="store_true")

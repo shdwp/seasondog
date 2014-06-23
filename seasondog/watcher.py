@@ -8,32 +8,43 @@ from seasondog import config
 def player_args(runtime, data, string):
     for call in re.finditer(r"(\@(?P<fn>[a-zA-Z_]+)\((?P<args>[^@]*)\))", string):
         match = call.group(1)
-        args = call.group("args").split(" ")
+        args = call.group("args").split(":")
         fn = call.group("fn")
 
         if fn == "subs":
+            path = args[0] if len(args) > 0 else "."
             limit = int(args[1]) if len(args) > 1 else 1
             delim = args[2] if len(args) > 2 else " "
 
-            files = matcher.match_subs(args[0], data[database.EPISODE], -1)
+            files = matcher.match_subs(path, data[database.EPISODE], -1)
             if files:
                 if limit != -1:
                     files = files[:limit]
                 string = string.replace(match, "\"{}\"".format(delim.join(files)))
             else:
+                print(r.format("{red}Warning: function {} matched nothing!{endc}", fn))
                 string = string.replace(match, "")
 
         elif fn == "files":
+            path = args[0] if len(args) > 0 else "."
             limit = int(args[1]) if len(args) > 1 else 1
             delim = args[2] if len(args) > 2 else " "
 
-            files = matcher.match_file(args[0], data[database.EPISODE], -1)
+            files = matcher.match_file(path, data[database.EPISODE], -1)
             if files:
                 if limit != -1:
                     files = files[:limit]
                 string = string.replace(match, "\"{}\"".format(delim.join(files)))
             else:
+                print(r.format("{red}Warning: function {} matched nothing!{endc}", fn))
                 string = string.replace(match, "")
+
+        elif fn == "var":
+            vars = {"path": runtime[r.PATH],
+                    "episode": data[database.EPISODE],
+                    }
+
+            string = string.replace(match, "\"{}\"".format(vars.get(args[0])))
 
     return string
         

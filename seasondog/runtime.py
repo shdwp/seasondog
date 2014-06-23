@@ -7,7 +7,7 @@ PLAYER_ARGS_OVERRIDE = 3
 
 def runtime_struct(path, opt):
     return {PATH: path,
-            DB_PATH: config.DB_PATH,
+            DB_PATH: opt.database or config.DB_PATH,
             PLAYER_ARGS_OVERRIDE: opt.player_args,
             }
 

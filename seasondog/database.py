@@ -38,7 +38,9 @@ def db_value(directory, episode, args):
 
 def init(db):
     with open(db[PATH], 'w') as f:
-        f.write(text("{}:{},{}:{}".format(info.NAME, info.VERSION, NAME, VERSION), STRLEN)+"\n")
+        f.write(text("{}:{},{}:{}".format(info.NAME,
+                                          info.VERSION, NAME, VERSION),
+                     STRLEN)+"\n")
 
 
 def check(header):
@@ -68,7 +70,7 @@ def load(file):
 
             db[DB][directory] = {
                 EPISODE: int(episode),
-                PLAYER_ARGS: player_args,}
+                PLAYER_ARGS: player_args, }
 
             line = f.readline()
 
@@ -83,7 +85,8 @@ def save(db):
 
     with open(db[PATH], 'a') as f:
         for directory, option in data.items():
-            f.write(db_value(directory, option[EPISODE], option[PLAYER_ARGS]) + "\n")
+            f.write(db_value(directory, option[EPISODE],
+                             option[PLAYER_ARGS]) + "\n")
 
 
 def commit(db):
@@ -112,7 +115,8 @@ def commit(db):
     f.seek(0)
     for i, [directory, data] in update.items():
         f.seek((i-1)*(STRLEN+1))
-        f.write((db_value(directory, data[EPISODE], data[PLAYER_ARGS]) + "\n").encode("utf-8"))
+        f.write((db_value(directory, data[EPISODE],
+                          data[PLAYER_ARGS]) + "\n").encode("utf-8"))
 
     f = open(db[PATH], 'a')
     for directory, data in new.items():
@@ -139,7 +143,8 @@ def update(db, directory, fn, *args, **kwargs):
 def migrate(db, old_path, new_path):
     data = get(db, old_path)
     if not data:
-        raise RuntimeError(r.format("{c_error}No record on {}!{endc}", old_path))
+        raise RuntimeError(r.format("{c_error}No record on {}!{endc}",
+                                    old_path))
 
     set(db, new_path, data)
     unset(db, old_path)

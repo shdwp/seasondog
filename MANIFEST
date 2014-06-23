@@ -8,4 +8,5 @@ seasondog/info.py
 seasondog/matcher.py
 seasondog/runtime.py
 seasondog/sdog
+seasondog/ui.py
 seasondog/watcher.py

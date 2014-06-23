@@ -12,7 +12,7 @@ def player_args(runtime, data, string):
         fn = call.group("fn")
 
         if fn == "subs":
-            path = args[0] if len(args) > 0 else "."
+            path = args[0] if len(args) > 0 and args[0] != '' else "."
             limit = int(args[1]) if len(args) > 1 else 1
             delim = args[2] if len(args) > 2 else " "
 

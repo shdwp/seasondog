@@ -28,7 +28,8 @@ def prefix_matcher(prefix, episode, extensions=[], zero=2):
 def prefix_suffix_matcher(prefix, suffix, episode, extensions=[], zero=2):
     return re_matcher(r"^.*{}{}{}.*({})$".format(prefix,
                                                  leading_zero(episode, zero),
-                                                 suffix, "|".join(extensions)))
+                                                 suffix,
+                                                 "|".join(extensions)))
 
 
 def nth_matcher(episode):
@@ -68,11 +69,14 @@ def match(directory, matchers, limit=1):
 def match_episode(directory, episode, limit=1):
     matchers = []
     for p in config.PREFIXES:
-        for s in config.SURROUNDINGS:
-            for s in config.SURROUNDINGS:
+        for s1 in config.SURROUNDINGS:
+            for s2 in config.SURROUNDINGS:
                 for i in range(1, 3):
-                    matchers.append(prefix_suffix_matcher(p+s, s, episode,
-                                                          MOVIE_EXTENSIONS, i))
+                    matchers.append(prefix_suffix_matcher(
+                        p+s1,
+                        s2, episode,
+                        MOVIE_EXTENSIONS,
+                        i))
 
     for i in range(1, 3):
         matchers.append(simple_matcher(episode, MOVIE_EXTENSIONS, i))
@@ -84,11 +88,15 @@ def match_episode(directory, episode, limit=1):
 def match_subs(directory, episode, limit=1):
     matchers = []
     for p in config.PREFIXES:
-        for s in config.SURROUNDINGS:
-            for s in config.SURROUNDINGS:
+        for s1 in config.SURROUNDINGS:
+            for s2 in config.SURROUNDINGS:
                 for i in range(1, 3):
-                    matchers.append(prefix_suffix_matcher(p, s, episode,
-                                                          SUB_EXTENSIONS, i))
+                    matchers.append(prefix_suffix_matcher(
+                        p+s1,
+                        s2,
+                        episode,
+                        SUB_EXTENSIONS,
+                        i))
 
     matchers.append(simple_matcher(episode, SUB_EXTENSIONS))
     matchers.append(nth_matcher(episode))

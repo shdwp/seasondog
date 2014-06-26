@@ -2,6 +2,8 @@
 
 Small tool for saving your progress in watching series.
 
+![seasondog](http://i.imgur.com/wixFHBC.png)
+
 ## Installation
 
 You can install seasondog trough `pip`:

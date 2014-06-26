@@ -2,7 +2,7 @@
 
 Small tool for saving your progress in watching series.
 
-![seasondog](http://i.imgur.com/wixFHBC.png)
+![seasondog](http://i.imgur.com/ykKRsA0.png)
 
 ## Installation
 

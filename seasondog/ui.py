@@ -25,7 +25,8 @@ def init_wizard(runtime, db):
 
 
 def opt_parser():
-    parser = OptionParser(epilog="version {}, {}".format(info.VERSION, info.URL))
+    parser = OptionParser(epilog="version {}, {}".format(info.VERSION,
+                                                         info.URL))
     parser.set_usage("""{} [action=next,prev,reset,status,set,args]
     n(ext) - watch next episode
     p(rev) - previous
@@ -41,11 +42,16 @@ def opt_parser():
     cleanup - remove not-existent directories from database
     s(tatus) - show progress and settings\n""".format(info.NAME))
     parser.add_option("", "--database", help="Provide database location")
-    parser.add_option("-a", "--player-args", help="Provide overriding player args")
+    parser.add_option("-a", "--player-args",
+                      help="Provide overriding player args")
     parser.add_option("-f", "--from", help="Provide from parameter for migration (instead of using current directory)")
-    parser.add_option("-p", "--not-preserve", help="Don't preserve directory name", action="store_true")
-    parser.add_option("-v", "--version", help="Show version", action="store_true")
-    parser.add_option("-d", "--debug", help="Turn on debug messages", action="store_true")
+    parser.add_option("-p", "--not-preserve",
+                      help="Don't preserve directory name",
+                      action="store_true")
+    parser.add_option("-v", "--version", help="Show version",
+                      action="store_true")
+    parser.add_option("-d", "--debug", help="Turn on debug messages",
+                      action="store_true")
 
     return parser
 
@@ -136,8 +142,8 @@ def main():
 
             if data:
                 print(r.format("Current episode: {blue}{}{endc}\nPlayer args: {blue}{}{endc}",
-                    data[database.EPISODE],
-                    data[database.PLAYER_ARGS] or "None",))
+                               data[database.EPISODE],
+                               data[database.PLAYER_ARGS] or "None",))
             else:
                 print(r.format("No data on {c_path}{}{endc}.", runtime[r.PATH]))
 

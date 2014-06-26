@@ -2,7 +2,7 @@ import os
 
 DB_PATH = os.path.join(os.path.expanduser("~"), ".seasondog", "database")
 PLAYER = "mplayer -lavdopts threads=4 -fs {player_args} \"{videofile}\""
-SUB_EXTENSIONS = ["srt", "ass", "aqt", "gsub", "sub", "ttxt", "pjs", "psb", "rt", "stl", "ssa", "usf", "idx",]
+SUB_EXTENSIONS = ["srt", "ass", "aqt", "gsub", "sub", "ttxt", "pjs", "psb", "rt", "stl", "ssa", "usf", "idx", ]
 MOVIE_EXTENSIONS = ["mov", "mpg", "mpeg", "m2v", "mkv", "webm", "ogm", "mp4", "m4v", "mp4v", "vob", "qt", "nuv", "wmv", "asf", "rm", "rmvb", "flc", "avi", "fli", "flv", "gl", "dl", "xcf", "xwd", "yuv", "cgm", "emf", ]
 PREFIXES = ["episode", "ep", "e", "x"]
 SURROUNDINGS = [" ", "", "_"]

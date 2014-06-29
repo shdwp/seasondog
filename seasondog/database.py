@@ -14,9 +14,7 @@ EPISODE = 5
 STRLEN = 512
 
 
-def increment(a):
-    return a + 1
-
+transaction = None
 
 def text(s, ln):
     if len(s) <= ln:
@@ -25,7 +23,7 @@ def text(s, ln):
         raise RuntimeError("Str value out of STRLEN!")
 
 
-def db_struct(path, db={}, transaction={}):
+def db_struct(path, db, transaction):
     return {DB: db,
             TRANSACTION: transaction,
             PATH: path,
@@ -51,7 +49,7 @@ def check(header):
 
 
 def load(file):
-    db = db_struct(file)
+    db = db_struct(file, {}, {})
 
     dir = os.path.join(*os.path.split(file)[:-1])
     if not os.path.exists(dir):
@@ -110,6 +108,7 @@ def commit(db):
                 update[pos] = [k, v]
         else:
             new[k] = v
+    f.close()
 
     f = open(db[PATH], 'r+b')
     f.seek(0)
@@ -117,10 +116,12 @@ def commit(db):
         f.seek((i-1)*(STRLEN+1))
         f.write((db_value(directory, data[EPISODE],
                           data[PLAYER_ARGS]) + "\n").encode("utf-8"))
+    f.close()
 
     f = open(db[PATH], 'a')
     for directory, data in new.items():
         f.write(db_value(directory, data[EPISODE], data[PLAYER_ARGS]) + "\n")
+    f.close()
 
 
 def get(db, directory):

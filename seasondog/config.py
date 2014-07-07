@@ -8,7 +8,7 @@ PREFIXES = ["episode", "ep", "e", "x"]
 SURROUNDINGS = [" ", "", "_"]
 
 COLORS = {
-    "grey": "\033[30,1m",
+    "grey": "\033[30m",
     "black": "\033[30m",
     "red": "\033[31m",
     "green": "\033[32m",

@@ -8,12 +8,14 @@ PREFIXES = ["episode", "ep", "e", "x"]
 SURROUNDINGS = [" ", "", "_"]
 
 COLORS = {
-    "blue": "\033[94m",
-    "magenta": "\033[95m",
-    "green": "\033[92m",
-    "yellow": "\033[93m",
-    "grey": "\033[90m",
-    "red": "\033[91m",
+    "black": "\033[30m",
+    "red": "\033[31m",
+    "green": "\033[32m",
+    "yellow": "\033[33m",
+    "blue": "\033[34m",
+    "magenta": "\033[35m",
+    "cyan": "\033[36m",
+    "white": "\033[37m",
 
     "bold": "\033[1m",
 
@@ -21,11 +23,11 @@ COLORS = {
 }
 
 COLORS.update({
-    "c_title": COLORS["grey"],
+    "c_title": COLORS["black"] + COLORS["bold"],
     "c_ep_number": COLORS["blue"] + COLORS["bold"],
     "c_path": COLORS["blue"],
     "c_args": COLORS["blue"],
-    "c_control": COLORS["grey"],
+    "c_control": COLORS["grey"] + COLORS["bold"],
     "c_success": COLORS["green"],
     "c_error": COLORS["red"],
 })

@@ -19,11 +19,11 @@ SURROUNDINGS = [" ", "", "_"]
 
 # Instead of COLORS[..] can be an code too
 COLORS.update({
-    "c_title": COLORS["grey"],
+    "c_title": COLORS["black"] + COLORS["bold"],
     "c_ep_number": COLORS["blue"] + COLORS["bold"],
     "c_path": COLORS["blue"],
     "c_args": COLORS["blue"],
-    "c_control": COLORS["grey"],
+    "c_control": COLORS["black"] + COLORS["bold"],
     "c_success": COLORS["green"],
     "c_error": COLORS["red"],
 })

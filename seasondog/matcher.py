@@ -71,7 +71,7 @@ def match_episode(directory, episode, limit=1):
     for p in config.PREFIXES:
         for s1 in config.SURROUNDINGS:
             for s2 in config.SURROUNDINGS:
-                for i in range(1, 3):
+                for i in [2, 3, 1]:
                     matchers.append(prefix_suffix_matcher(
                         p+s1,
                         s2, episode,

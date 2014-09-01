@@ -3,6 +3,7 @@ try:
     import readline
 except ImportError:
     pass
+
 from seasondog import config
 from seasondog import info
 from seasondog import database as database
@@ -32,7 +33,7 @@ def opt_parser():
     p(rev) - previous
     w(atch) - watch current episode
     set <EPISODE> - set progress
-    args <ARGS> - set player args
+    args - update player args
     r(eset) - reset progress and settings for directory
         -f <PATH> - provide directory PATH instead of current one
     m(igrate) <DESTINATION> - migrate current directory to DESTINATION
@@ -164,7 +165,7 @@ def main():
                 raise RuntimeError(r.format("{c_error}{} is not a number!{endc}", arg(args, 1)))
 
         elif action == "args":
-            data[database.PLAYER_ARGS] = arg(args, 1)
+            data[database.PLAYER_ARGS] = input("Player args: ")
             iswatch = False
 
         database.set(db, runtime[r.PATH], data)

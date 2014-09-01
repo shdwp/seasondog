@@ -40,7 +40,7 @@ After you finish setup you can use such commands:
 * `sdog set <EPISODE>` - set episode directly and watch it
 * `sdog r(eset)` - delete current directory (or directory, provided by `-f` argument) from database
 * `sdog s(tatus)` - get current dir status information
-* `sdog args <ARGS>` - set player args in database
+* `sdog args` - update player args in database
 * `sdog m(igrate) <DEST>` - migrate current's directory status into DEST, with directory name preserved. You can disable preservation and provide full path using `-p` argument. Also, instead of using current directory you can provide it by yourself with `-f <FROM>` argument.
 * `sdog cleanup` - remove not-existent directories from database
 
